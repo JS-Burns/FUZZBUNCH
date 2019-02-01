@@ -197,7 +197,7 @@ class RedirectionManager:
             return
 
         # Restore the old information to the session
-        for key,val in stored_session_data['params'].items():
+        for key,val in list(stored_session_data['params'].items()):
             plugin.set(key, val)
 
     def print_session(self, id):
@@ -230,11 +230,11 @@ class RedirectionManager:
         while not done:
             try:
                 line = self.io.prompt_user(msg, default)
-            except exception.PromptHelp, err:
+            except exception.PromptHelp as err:
                 self.io.print_warning('No help available')
-            except exception.PromptErr, err:
+            except exception.PromptErr as err:
                 raise
-            except exception.CmdErr, err:
+            except exception.CmdErr as err:
                 self.io.print_error(err.getErr())
             if line:
                 return line
@@ -247,11 +247,11 @@ class RedirectionManager:
                 line = self.io.prompt_user(msg, default)
                 plugin.set(var, line)
                 done = plugin.hasValidValue(var)
-            except exception.PromptHelp, err:
+            except exception.PromptHelp as err:
                 self.io.print_warning('No help available')
-            except exception.PromptErr, err:
+            except exception.PromptErr as err:
                 raise
-            except exception.CmdErr, err:
+            except exception.CmdErr as err:
                 self.io.print_error(err.getErr())
         return plugin.get(var)
 
@@ -282,7 +282,7 @@ class RedirectionManager:
             self.io.print_success("(%s) Remote %s:%s" % (r.protocol, callbackip, callbackport))
         except exception.PromptErr:
             self.io.print_error("Aborted by user")
-            for (var,val) in cache.items():
+            for (var,val) in list(cache.items()):
                 try:
                     plugin.set(var, val)
                 except:
@@ -323,7 +323,7 @@ class RedirectionManager:
                 self.io.print_success("(%s) Local %s:%s" % (l.protocol, targetip, targetport))
         except exception.PromptErr:
             self.io.print_error("Aborted by user")
-            for (var,val) in cache.items():
+            for (var,val) in list(cache.items()):
                 try:
                     plugin.set(var, val)
                 except:
@@ -497,7 +497,7 @@ class RedirectionManager:
                 else:
                     self.straight_remote(r, plugin)
         except exception.PromptErr:
-            for key,val in session_data['params'].items():
+            for key,val in list(session_data['params'].items()):
                 plugin.set(key, val)
             raise
 

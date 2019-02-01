@@ -57,7 +57,7 @@ class SessionInfo:
 
     def __repr__(self):
         string  = ">>> %d :: %s\n" % (self.item.id, self.item.name)
-        for v in self.params.itervalues():
+        for v in self.params.values():
             string += "    %s\n" % (str(v))
         return string
 
@@ -94,11 +94,11 @@ class SessionInfo:
         try:
             return self.params[var]
         except KeyError:
-            raise exception.CmdErr, "%s does not exist" % var
+            raise exception.CmdErr("%s does not exist" % var)
 
     def get_paramlist(self):
         """Get a list of all parameter var,vals"""
-        return self.params.items()
+        return list(self.params.items())
 
 
 class SessionItem(object):
@@ -211,7 +211,7 @@ class SessionItem(object):
         if status.upper() in ("RUNNING", "FAIL", "READY", "USED"):
             self.status = status.upper()
         else:
-            raise exception.CmdErr, "%s invalid status" % status
+            raise exception.CmdErr("%s invalid status" % status)
 
     def mark_running(self):
         self.set_status("RUNNING")
@@ -287,7 +287,7 @@ class Session:
         try:
             return self.items[index]
         except IndexError:
-            raise exception.CmdErr, "Bad index %d" % index
+            raise exception.CmdErr("Bad index %d" % index)
 
     """
     Bulk access
@@ -312,5 +312,5 @@ class Session:
         if item.contract:
             return item.contract
         else:
-            raise exception.CmdErr, "Contract not available"
+            raise exception.CmdErr("Contract not available")
 

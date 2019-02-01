@@ -212,7 +212,7 @@ def parse_redirection(xmlFile):
     # Insert a fix for XPath identifiers in redirection sections.
     # These shouldn't be here, but this fixes everything for now...
     for tunnel in redirection['remote'] + redirection['local']:
-        for k,v in tunnel.items():
+        for k,v in list(tunnel.items()):
             if v.lower() == '//identifier':
                 tunnel[k] = 'TargetIp'
             elif re.match(r'//service\[name=.*\]/port', v.lower()):

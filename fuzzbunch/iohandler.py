@@ -174,7 +174,7 @@ class IOhandler:
     def get_input(self, prompt):
         if self.raw_input:
             try:
-                line = raw_input(prompt)
+                line = input(prompt)
             except (EOFError, KeyboardInterrupt):
                 line = 'EOF'
         else:
@@ -209,10 +209,10 @@ class IOhandler:
             self.newline()
 
         if line.upper() in ("EOF", "Q", "QUIT"):
-            raise exception.PromptErr, "Aborted by user"
+            raise exception.PromptErr("Aborted by user")
 
         if line.upper() in ("?", "HELP"):
-            raise exception.PromptHelp, "No help available"
+            raise exception.PromptHelp("No help available")
 
         # Retrieve the line, and replace any '$' vars with their values
         line = variable_replace(line, gvars)
@@ -226,7 +226,7 @@ class IOhandler:
                 index = int(line)
                 line = params[index][0]
             except (IndexError, ValueError):
-                raise exception.CmdErr, "Invalid input"
+                raise exception.CmdErr("Invalid input")
 
         return line
 
@@ -241,7 +241,7 @@ class IOhandler:
     def prompt_continue(self):
         line = self.prompt_user("Execute Plugin?", "Yes")
         if line.lower() not in ("yes", "y"):
-            raise exception.CmdErr, "Execution Aborted"
+            raise exception.CmdErr("Execution Aborted")
         return
 
     def prompt_confirm_redir(self):
@@ -360,7 +360,7 @@ class IOhandler:
 
     """
     def colorize(self, line):
-        for pattern, attrs in self.colormap.items():
+        for pattern, attrs in list(self.colormap.items()):
             plen = len(pattern)
             index = line.find(pattern)
             if self.colormap == VMAP:
@@ -460,7 +460,7 @@ class IOhandler:
         for type,info in args['info']:
             self.write("%s:\n" % type)
             if info:
-                params = [x[:2] for x in dict(info.get_paramlist()).values()]
+                params = [x[:2] for x in list(dict(info.get_paramlist()).values())]
                 params.insert(0, ("Name", "Value"))
                 params.insert(1, ("----", "-----"))
                 widths = self.get_column_max_width(params)
@@ -812,7 +812,7 @@ class IOhandler:
     def print_autoruncmds(self, status, auto):
         if status:
             self.print_msg("Autorun ON")
-            for cat, cmds in auto.items():
+            for cat, cmds in list(auto.items()):
                 self.print_headingline(cat + " Autorun List")
                 for i,cmd in enumerate(cmds):
                     self.write("  %d) %s" % (i,cmd[0]))
